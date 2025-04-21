@@ -30,21 +30,23 @@ const FilterControls = ({
       </div>
 
       <div className="col-md-6 mt-3 mt-md-0">
-        <div className="form-check">
+        <div className="form-check form-switch">
           <input
             className="form-check-input"
-            type="radio"
-            name="grayscaleRadio"
-            id="grayscaleRadio"
+            type="checkbox"
+            role="switch"
+            id="grayscaleSwitch"
             checked={useGrayscale}
             onChange={() => {
-              setUseGrayscale(true);
-              setActiveFilter('grayscale');
-              applyGrayscale();
+              setUseGrayscale(!useGrayscale);
+              if (!useGrayscale) {
+                setActiveFilter('grayscale');
+                applyGrayscale();
+              }
             }}
             disabled={isProcessing}
           />
-          <label className="form-check-label" htmlFor="grayscaleRadio">
+          <label className="form-check-label" htmlFor="grayscaleSwitch">
             Convert to Grayscale
           </label>
         </div>
@@ -67,7 +69,7 @@ const FilterControls = ({
           />
         </div>
         <div className="col-md-6">
-          <label className="form-label">Sigma: {params.sigma}</label>
+          <label className="form-label">Sigma: {params.sigma.toFixed(1)}</label>
           <input
             type="range"
             min="0.1"
@@ -75,6 +77,24 @@ const FilterControls = ({
             step="0.1"
             value={params.sigma}
             onChange={(e) => setParams({ ...params, sigma: parseFloat(e.target.value) })}
+            disabled={isProcessing}
+            className="form-range"
+          />
+        </div>
+      </div>
+    )}
+
+    {activeFilter === 'median' && !useGrayscale && (
+      <div className="row mb-3">
+        <div className="col-md-12">
+          <label className="form-label">Kernel Size: {params.ksize}</label>
+          <input
+            type="range"
+            min="1"
+            max="15"
+            step="2"
+            value={params.ksize}
+            onChange={(e) => setParams({ ...params, ksize: parseInt(e.target.value) })}
             disabled={isProcessing}
             className="form-range"
           />

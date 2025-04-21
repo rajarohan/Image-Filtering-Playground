@@ -12,7 +12,7 @@ function App() {
   const [filteredImage, setFilteredImage] = useState(null);
   const [activeFilter, setActiveFilter] = useState('gaussian');
   const [useGrayscale, setUseGrayscale] = useState(false);
-  const [params, setParams] = useState({ ksize: 3, sigma: 1.5 });
+  const [params, setParams] = useState({ ksize: 5, sigma: 1.5 });
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
   const canvasRef = useRef(null);
@@ -60,12 +60,24 @@ function App() {
           formData.append('filter', activeFilter);
           formData.append('params', JSON.stringify(params));
 
-          const response = await fetch('http://127.0.0.1:5000/apply-filter', {
+          let endpoint = 'apply-filter';
+          if (activeFilter === 'histogram') {
+            endpoint = 'histogram';
+          } else if (activeFilter === 'equalization') {
+            endpoint = 'equalize-histogram';
+          } else if (activeFilter === 'stretching') {
+            endpoint = 'stretch-histogram';
+          }
+
+          const response = await fetch(`http://127.0.0.1:5000/${endpoint}`, {
             method: 'POST',
             body: formData,
           });
 
-          if (!response.ok) throw new Error(`Server error: ${response.status}`);
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Server error: ${response.status}`);
+          }
 
           const resultBlob = await response.blob();
           setFilteredImage(URL.createObjectURL(resultBlob));
@@ -129,6 +141,7 @@ function App() {
         originalImage={originalImage}
         filteredImage={filteredImage}
         canvasRef={canvasRef}
+        activeFilter={activeFilter}
       />
     </div>
   );
