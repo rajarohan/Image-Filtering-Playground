@@ -1,38 +1,79 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+body {
+  background: linear-gradient(to right, #f8f9fa, #e0eafc);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.App-link {
-  color: #61dafb;
+h1 {
+  font-weight: 700;
+  color: #2c3e50;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.card {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: none;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card-header {
+  background-color: #dee2e6;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.5rem;
+}
+
+.btn-primary {
+  background-color: #0069d9;
+  border-color: #0062cc;
+  border-radius: 0.4rem;
+  padding: 10px 24px;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004a99;
+}
+
+.form-range::-webkit-slider-thumb {
+  background-color: #0069d9;
+}
+
+img,
+canvas {
+  transition: transform 0.3s ease-in-out;
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+}
+
+img:hover {
+  transform: scale(1.03);
+}
+
+.alert {
+  font-size: 0.95rem;
+}
+
+.spinner-border {
+  vertical-align: middle;
+}
+
+@media (max-width: 767px) {
+  h1 {
+    font-size: 1.75rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .card-header {
+    text-align: center;
   }
 }

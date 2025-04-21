@@ -49,6 +49,33 @@ def apply_image_filter():
         )
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+@app.route('/histogram', methods=['POST'])
+def generate_histogram():
+    file = request.files['image']
+    img_array = np.frombuffer(file.read(), np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
+    buffer = plot_histogram(img)
+    return send_file(buffer, mimetype='image/png')
+
+@app.route('/stretch-histogram', methods=['POST'])
+def stretch_histogram():
+    file = request.files['image']
+    img_array = np.frombuffer(file.read(), np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+    stretched = histogram_stretching(img)
+    _, buffer = cv2.imencode('.png', stretched)
+    return send_file(BytesIO(buffer), mimetype='image/png')
+
+@app.route('/equalize-histogram', methods=['POST'])
+def equalize_histogram():
+    file = request.files['image']
+    img_array = np.frombuffer(file.read(), np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+    equalized = histogram_equalization(img)
+    _, buffer = cv2.imencode('.png', equalized)
+    return send_file(BytesIO(buffer), mimetype='image/png')
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -1,7 +1,40 @@
 # backend/filters.py
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 
+def plot_histogram(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
+
+    plt.figure(figsize=(6, 4))
+    plt.plot(hist, color='gray')
+    plt.title("Histogram")
+    plt.xlabel("Pixel value")
+    plt.ylabel("Frequency")
+    plt.grid(True)
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    plt.close()
+
+    return buffer
+
+def histogram_stretching(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    min_val = np.min(gray)
+    max_val = np.max(gray)
+    stretched = (gray - min_val) * (255.0 / (max_val - min_val))
+    stretched = np.clip(stretched, 0, 255).astype(np.uint8)
+    return stretched
+
+def histogram_equalization(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    equalized = cv2.equalizeHist(gray)
+    return equalized
 def apply_filter(img, filter_type, params):
     if filter_type == 'gaussian':
         ksize = params.get('ksize', 5)
